@@ -13,7 +13,7 @@ class RestaurantTest {
     @Order(1)
     public void TestSaving() {
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
-        restaurants.add(new Restaurant("r1", "a1", null, 13, true, true, 23.239, 45.2837));
+        restaurants.add(new Restaurant("r1", "a1", null, 13, true, true, 23.239, 45.2837,  null));
         ListManager listManager = new ListManager();
         listManager.save(restaurants);
         try{
@@ -83,8 +83,8 @@ class RestaurantTest {
     @Order(5)
     public void TestUpdate(){
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
-        restaurants.add(new Restaurant("n1", "b1", null, 13, true, true, 23.239, 45.2837));
-        restaurants.add(new Restaurant("djfndj", "ndjfn", null, 35, true, true, 3.239, 45.2837));
+        restaurants.add(new Restaurant("n1", "b1", null, 13, true, true, 23.239, 45.2837, null));
+        restaurants.add(new Restaurant("djfndj", "ndjfn", null, 35, true, true, 3.239, 45.2837, null));
         try{
             FileWriter fw = new FileWriter("listOfRestaurants.csv", false);
             fw.close();

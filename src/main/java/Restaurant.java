@@ -17,7 +17,6 @@ public class Restaurant {
     public Restaurant(String name, String address, String telNumber, int places, boolean outside, boolean lunchMenu, double longtitude, double latitude, UUID uuid){
         //Restaurant details
         this.name=name;
-        this.uuid = uuid;
         if(telNumber!=null) {
             this.number = true;
         }else{
@@ -34,6 +33,13 @@ public class Restaurant {
         this.longtitude=longtitude;
         this.latitude=latitude;
         this.address=address;
+
+        //Restaurant UUID
+        if (uuid!=null){
+            this.uuid=uuid;
+        } else {
+            this.uuid = UUID.randomUUID();
+        }
     }
 
     public String getName() {

@@ -2,10 +2,12 @@
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class ListManager {
     private static final String COLUMN_SEPARATOR = ",";
     private static final String FILE_PATH = "~/listOfRestaurants.csv";
+
     public void update(HashSet restaurants){
         try(FileWriter fw = new FileWriter(FILE_PATH, false);){
             save(restaurants);
@@ -24,6 +26,7 @@ public class ListManager {
 
         return null;
     }
+
     public Restaurant findByName(String name){
         Set<Restaurant> restaurants = load();
 
@@ -33,6 +36,7 @@ public class ListManager {
 
         return null;
     }
+
     public HashSet<Restaurant> load(){
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
 
@@ -40,7 +44,7 @@ public class ListManager {
             String line = br.readLine();
 
             while(line!=null){
-                List<String> values = Arrays.asList(line.split(","));
+                List<String> values = Arrays.asList(line.split(COLUMN_SEPARATOR));
 
                 if(Boolean.parseBoolean(values.get(2))) {
                     restaurants.add(new Restaurant(
@@ -76,6 +80,7 @@ public class ListManager {
         }
         return restaurants;
     }
+
     public void deleteId(UUID uuid) throws IndexOutOfBoundsException{
         HashSet<Restaurant> restaurants = load();
 
@@ -83,16 +88,23 @@ public class ListManager {
 
         save(restaurants);
     }
+
     public void save(HashSet<Restaurant> restaurants){
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH, "UTF-8"));){
-            for(Restaurant restaurant : restaurants) {
-                bufferedWriter.write(RestaurantToString(restaurant));
-                bufferedWriter.newLine();
-            }
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"));){
+            Stream<Restaurant> stream = restaurants.stream();
+            stream.forEach(i->{
+                    try{
+                        bufferedWriter.write(RestaurantToString(i));
+                        bufferedWriter.newLine();
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
     public String RestaurantToString(Restaurant restaurant){
         StringBuffer sb = new StringBuffer();
         sb.append(restaurant.getName().trim());
@@ -118,4 +130,5 @@ public class ListManager {
         sb.append(restaurant.getUuid().toString());
         return sb.toString();
     }
+
 }

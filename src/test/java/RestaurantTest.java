@@ -17,7 +17,7 @@ RestaurantTest {
 
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
 
-        restaurants.add(new Restaurant("r1", "a1", null, 13, true, true, 23.239, 45.2837,  null));
+        restaurants.add(new Restaurant("r1", "a1", "0885674563", 13, true, true, 23.239, 45.2837,  null));
         restaurants.add(new Restaurant("r2", "a2", null, 13, true, true, 23.239, 45.2837,  null));
 
         RestaurantsManager restaurantsManager = new RestaurantsManager();
@@ -25,6 +25,7 @@ RestaurantTest {
 
         try{
             BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream("listOfRestaurants.csv"), "UTF-8"));
+
             int savedR = 0;
 
             while(bf.readLine().toString()!=null){
@@ -71,12 +72,12 @@ RestaurantTest {
                             values.get(0),
                             values.get(1),
                             null,
-                            Integer.parseInt(values.get(3)),
-                            Boolean.parseBoolean(values.get(4)),
+                            Integer.parseInt(values.get(4)),
                             Boolean.parseBoolean(values.get(5)),
-                            Double.parseDouble(values.get(6)),
+                            Boolean.parseBoolean(values.get(6)),
                             Double.parseDouble(values.get(7)),
-                            UUID.fromString(values.get(8))
+                            Double.parseDouble(values.get(8)),
+                            UUID.fromString(values.get(9))
                     ));
                 }
 
@@ -93,35 +94,38 @@ RestaurantTest {
 
     @Test
     @Order(3)
-    public void TestDelete () {
-
-        RestaurantsManager restaurantsManager = new RestaurantsManager();
-        HashSet<Restaurant> restaurants = restaurantsManager.load();
-        int size = restaurants.size();
-
-        for(Restaurant restaurant : restaurants){
-            if(restaurant.getName()=="r1"){
-                restaurantsManager.deleteId(restaurant.getUuid());
-            }
-        }
-
-        HashSet<Restaurant> restaurants1 = restaurantsManager.load();
-
-        assertEquals(restaurants1.size(), size);
-
-    }
-
-    @Test
-    @Order(4)
     public void TestFind(){
         RestaurantsManager restaurantsManager = new RestaurantsManager();
 
         HashSet<Restaurant> restaurants = restaurantsManager.load();
 
         Restaurant restaurant = restaurantsManager.find(restaurants, "r1");
-        Restaurant restaurant1 = restaurantsManager.find(restaurants, "r1");
+
         assertEquals(restaurant.getName(), "r1");
     }
+
+    @Test
+    @Order(4)
+    public void TestDelete () {
+
+        RestaurantsManager restaurantsManager = new RestaurantsManager();
+
+        HashSet<Restaurant> restaurants = restaurantsManager.load();
+
+        int size = restaurants.size();
+
+        restaurants.forEach(i -> {
+            if(i.getName().equals("r1")){
+                restaurantsManager.deleteId(i.getUuid());
+            }
+        });
+
+        HashSet<Restaurant> restaurants1 = restaurantsManager.load();
+
+        assertEquals(size-1, restaurants1.size());
+
+    }
+
 
     /*@Test
     @Order(4)
@@ -147,7 +151,7 @@ RestaurantTest {
         }
     }*/
 
-    @Test
+    /*@Test
     @Order(5)
     public void TestUpdate(){
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
@@ -161,6 +165,6 @@ RestaurantTest {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
 }

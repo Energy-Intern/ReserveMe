@@ -24,6 +24,7 @@ public class RestaurantsManager {
 
     public Restaurant find(HashSet<Restaurant> restaurants, String s){
         restaurants.removeIf(i -> !i.getUuid().toString().equals(s) && !i.getName().equals(s));
+
         return (Restaurant) restaurants.toArray()[0];
     }
 
@@ -54,12 +55,13 @@ public class RestaurantsManager {
                             values.get(0),
                             values.get(1),
                             null,
-                            Integer.parseInt(values.get(3)),
-                            Boolean.parseBoolean(values.get(4)),
+                            Integer.parseInt(values.get(4)),
                             Boolean.parseBoolean(values.get(5)),
-                            Double.parseDouble(values.get(6)),
+                            Boolean.parseBoolean(values.get(6)),
                             Double.parseDouble(values.get(7)),
-                            UUID.fromString(values.get(8))));
+                            Double.parseDouble(values.get(8)),
+                            UUID.fromString(values.get(9))
+                    ));
                 }
                 line = br.readLine();
             }
@@ -80,9 +82,9 @@ public class RestaurantsManager {
     }
 
     public void save(HashSet<Restaurant> restaurants){
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"));){
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"))){
             Stream<Restaurant> stream = restaurants.stream();
-            bufferedWriter.write("Name, Address, Number, Places, OutsideSitting, LunchMenu, Longtitude, Latitude, UUID");
+
             stream.forEach(i->{
                     try{
                         bufferedWriter.write(RestaurantToString(i));
@@ -98,29 +100,40 @@ public class RestaurantsManager {
 
     public String RestaurantToString(Restaurant restaurant){
         StringBuffer sb = new StringBuffer();
+
         sb.append(restaurant.getName().trim());
         sb.append(COLUMN_SEPARATOR);
+
         sb.append(restaurant.getAddress().trim());
         sb.append(COLUMN_SEPARATOR);
+
         sb.append(restaurant.isNumber());
         sb.append(COLUMN_SEPARATOR);
+
         if(restaurant.isNumber()){
             sb.append(restaurant.getTelNumber().trim());
             sb.append(COLUMN_SEPARATOR);
         }else{
             sb.append(" ,");
         }
+
         sb.append(restaurant.getPlaces());
         sb.append(COLUMN_SEPARATOR);
+
         sb.append(restaurant.isOutside());
         sb.append(COLUMN_SEPARATOR);
+
         sb.append(restaurant.isLunchMenu());
         sb.append(COLUMN_SEPARATOR);
+
         sb.append(restaurant.getLongtitude());
         sb.append(COLUMN_SEPARATOR);
+
         sb.append(restaurant.getLatitude());
         sb.append(COLUMN_SEPARATOR);
+
         sb.append(restaurant.getUuid().toString());
+
         return sb.toString();
     }
 

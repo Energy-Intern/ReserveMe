@@ -1,12 +1,18 @@
 
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVParser;
 
-public class ListManager {
+public class RestaurantsManager {
     private static final String COLUMN_SEPARATOR = ",";
-    private static final String FILE_PATH = "~/listOfRestaurants.csv";
+    private static final String FILE_PATH = "listOfRestaurants.csv";
 
     public void update(HashSet restaurants){
         try(FileWriter fw = new FileWriter(FILE_PATH, false);){
@@ -15,26 +21,10 @@ public class ListManager {
             e.printStackTrace();
         }
     }
-    public Restaurant findById(UUID uuid){
-        Set<Restaurant> restaurants = load();
 
-        for(Restaurant restaurant:restaurants){
-            if(restaurant.getUuid().equals(uuid)){
-                return restaurant;
-            }
-        }
-
-        return null;
-    }
-
-    public Restaurant findByName(String name){
-        Set<Restaurant> restaurants = load();
-
-        for(Restaurant restaurant:restaurants){
-            if(restaurant.getName().equals(name))return restaurant;
-        }
-
-        return null;
+    public Restaurant find(HashSet<Restaurant> restaurants, String s){
+        restaurants.removeIf(i -> !i.getUuid().toString().equals(s) && !i.getName().equals(s));
+        return (Restaurant) restaurants.toArray()[0];
     }
 
     public HashSet<Restaurant> load(){
@@ -92,6 +82,7 @@ public class ListManager {
     public void save(HashSet<Restaurant> restaurants){
         try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"));){
             Stream<Restaurant> stream = restaurants.stream();
+            bufferedWriter.write("Name, Address, Number, Places, OutsideSitting, LunchMenu, Longtitude, Latitude, UUID");
             stream.forEach(i->{
                     try{
                         bufferedWriter.write(RestaurantToString(i));
@@ -116,6 +107,8 @@ public class ListManager {
         if(restaurant.isNumber()){
             sb.append(restaurant.getTelNumber().trim());
             sb.append(COLUMN_SEPARATOR);
+        }else{
+            sb.append(" ,");
         }
         sb.append(restaurant.getPlaces());
         sb.append(COLUMN_SEPARATOR);

@@ -1,4 +1,4 @@
-
+package com.github.AngelBarov;
 
 import java.io.*;
 import java.util.Arrays;
@@ -6,9 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVParser;
 
 public class RestaurantsManager {
     private static final String COLUMN_SEPARATOR = ",";
@@ -70,6 +67,7 @@ public class RestaurantsManager {
         }catch (IOException e){
             e.printStackTrace();
         }
+
         return restaurants;
     }
 

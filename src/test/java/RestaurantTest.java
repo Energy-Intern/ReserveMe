@@ -1,10 +1,11 @@
+import com.github.AngelBarov.Restaurant;
+import com.github.AngelBarov.RestaurantsManager;
+
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
@@ -98,12 +99,14 @@ RestaurantTest {
         RestaurantsManager restaurantsManager = new RestaurantsManager();
 
         HashSet<Restaurant> restaurants = restaurantsManager.load();
+        HashSet<Restaurant> restaurants1 = restaurantsManager.load();
 
-        Restaurant restaurant = restaurantsManager.find(restaurants, "r1");
-
-        assertEquals(restaurant.getName(), "r1");
+        restaurants.forEach(i->{
+            assertEquals(i.getName(), restaurantsManager.find(restaurants1, i.getUuid().toString()).getName());
+            assertEquals(i.getUuid(), restaurantsManager.find(restaurants1, i.getName()).getUuid());
+        });
     }
-
+/*
     @Test
     @Order(4)
     public void TestDelete () {
@@ -130,10 +133,10 @@ RestaurantTest {
     /*@Test
     @Order(4)
     public void TestFindById(){
-        Set<Restaurant> restaurants = new ListManager().load();
+        Set<com.github.AngelBarov.Restaurant> restaurants = new ListManager().load();
 
-        for(Restaurant restaurant:restaurants){
-            Restaurant restaurant1 = new ListManager().findById(restaurant.getUuid());
+        for(com.github.AngelBarov.Restaurant restaurant:restaurants){
+            com.github.AngelBarov.Restaurant restaurant1 = new ListManager().findById(restaurant.getUuid());
 
             assertEquals(restaurant.getName(), restaurant1.getName());
         }
@@ -142,11 +145,11 @@ RestaurantTest {
     @Test
     @Order(4)
     public void TestFindByName(){
-        HashSet<Restaurant> restaurants = new ListManager().load();
+        HashSet<com.github.AngelBarov.Restaurant> restaurants = new ListManager().load();
 
-        Restaurant restaurant = new ListManager().findByName("r1");
+        com.github.AngelBarov.Restaurant restaurant = new ListManager().findByName("r1");
 
-        for(Restaurant restaurant1 : restaurants){
+        for(com.github.AngelBarov.Restaurant restaurant1 : restaurants){
             assertEquals(restaurant.getTelNumber(), restaurant1.getTelNumber());
         }
     }*/
@@ -154,13 +157,13 @@ RestaurantTest {
     /*@Test
     @Order(5)
     public void TestUpdate(){
-        HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
+        HashSet<com.github.AngelBarov.Restaurant> restaurants = new HashSet<com.github.AngelBarov.Restaurant>();
 
-        restaurants.add(new Restaurant("n1", "b1", null, 13, true, true, 23.239, 45.2837, null));
-        restaurants.add(new Restaurant("djfndj", "ndjfn", null, 35, true, true, 3.239, 45.2837, null));
+        restaurants.add(new com.github.AngelBarov.Restaurant("n1", "b1", null, 13, true, true, 23.239, 45.2837, null));
+        restaurants.add(new com.github.AngelBarov.Restaurant("djfndj", "ndjfn", null, 35, true, true, 3.239, 45.2837, null));
 
         try(FileWriter fw = new FileWriter("listOfRestaurants.csv", false);){
-            new RestaurantsManager().save(restaurants);
+            new com.github.AngelBarov.RestaurantsManager().save(restaurants);
         }catch (IOException e) {
             e.printStackTrace();
         }

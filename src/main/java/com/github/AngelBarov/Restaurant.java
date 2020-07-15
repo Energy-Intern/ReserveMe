@@ -1,3 +1,5 @@
+package com.github.AngelBarov;
+
 import java.util.*;
 import java.util.function.Predicate;
 

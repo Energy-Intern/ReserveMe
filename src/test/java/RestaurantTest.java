@@ -101,12 +101,16 @@ RestaurantTest {
         HashSet<Restaurant> restaurants = restaurantsManager.load();
         HashSet<Restaurant> restaurants1 = restaurantsManager.load();
 
-        restaurants.forEach(i->{
-            assertEquals(i.getName(), restaurantsManager.find(restaurants1, i.getUuid().toString()).getName());
-            assertEquals(i.getUuid(), restaurantsManager.find(restaurants1, i.getName()).getUuid());
-        });
+        Restaurant r = (Restaurant)restaurants1.toArray()[0];
+
+        String name = r.getName();
+        String uuid = r.getUuid().toString();
+
+        assertEquals(r.getUuid(), restaurantsManager.find(restaurants1, name).getUuid());
+        assertEquals(r.getName(), restaurantsManager.find(restaurants1, uuid).getName());
+
     }
-/*
+
     @Test
     @Order(4)
     public void TestDelete () {
@@ -128,31 +132,6 @@ RestaurantTest {
         assertEquals(size-1, restaurants1.size());
 
     }
-
-
-    /*@Test
-    @Order(4)
-    public void TestFindById(){
-        Set<com.github.AngelBarov.Restaurant> restaurants = new ListManager().load();
-
-        for(com.github.AngelBarov.Restaurant restaurant:restaurants){
-            com.github.AngelBarov.Restaurant restaurant1 = new ListManager().findById(restaurant.getUuid());
-
-            assertEquals(restaurant.getName(), restaurant1.getName());
-        }
-    }
-
-    @Test
-    @Order(4)
-    public void TestFindByName(){
-        HashSet<com.github.AngelBarov.Restaurant> restaurants = new ListManager().load();
-
-        com.github.AngelBarov.Restaurant restaurant = new ListManager().findByName("r1");
-
-        for(com.github.AngelBarov.Restaurant restaurant1 : restaurants){
-            assertEquals(restaurant.getTelNumber(), restaurant1.getTelNumber());
-        }
-    }*/
 
     /*@Test
     @Order(5)

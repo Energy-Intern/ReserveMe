@@ -1,7 +1,6 @@
 package com.github.AngelBarov;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 public class Restaurant {
     private final UUID uuid;

@@ -1,10 +1,7 @@
 package com.github.AngelBarov;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class RestaurantsManager {
@@ -19,10 +16,14 @@ public class RestaurantsManager {
         }
     }
 
-    public Restaurant find(HashSet<Restaurant> restaurants, String s){
+    public Restaurant find(Collection<Restaurant> restaurants, String s){
         restaurants.removeIf(i -> !i.getUuid().toString().equals(s) && !i.getName().equals(s));
 
-        return (Restaurant) restaurants.toArray()[0];
+        try{
+            return (Restaurant) restaurants.toArray()[0];
+        }catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     public HashSet<Restaurant> load(){

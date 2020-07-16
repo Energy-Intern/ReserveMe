@@ -1,3 +1,5 @@
+package com.github.AngelBarov.tests;
+
 import com.github.AngelBarov.Restaurant;
 import com.github.AngelBarov.RestaurantsManager;
 
@@ -9,8 +11,9 @@ import java.util.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
-class
-RestaurantTest {
+class RestaurantTest {
+    private static final String FILE_PATH = "listOfRestaurants.csv";
+    private static final String COLUMN_SEPARATOR = ",";
 
     @Test
     @Order(1)
@@ -25,7 +28,7 @@ RestaurantTest {
         restaurantsManager.save(restaurants);
 
         try{
-            BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream("listOfRestaurants.csv"), "UTF-8"));
+            BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_PATH), "UTF-8"));
 
             int savedR = 0;
 
@@ -47,14 +50,15 @@ RestaurantTest {
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("listOfRestaurants.csv"));
+            BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));
             String line = br.readLine();
+            line=br.readLine();
 
             while(line!=null) {
 
                 howMuch++;
 
-                List<String> values = Arrays.asList(line.split(","));
+                List<String> values = Arrays.asList(line.split(COLUMN_SEPARATOR));
 
                 if (Boolean.parseBoolean(values.get(2))){
                     restaurants.add(new Restaurant(
@@ -123,7 +127,7 @@ RestaurantTest {
 
         restaurants.forEach(i -> {
             if(i.getName().equals("r1")){
-                restaurantsManager.deleteId(i.getUuid());
+                restaurantsManager.delete(i.getName());
             }
         });
 

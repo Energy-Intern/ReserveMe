@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Stream;
 
+import org.apache.commons.csv.*;
+
 public class RestaurantsManager {
     private static final String COLUMN_SEPARATOR = ",";
     private static final String FILE_PATH = "listOfRestaurants.csv";
@@ -31,6 +33,7 @@ public class RestaurantsManager {
 
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));){
             String line = br.readLine();
+            line = br.readLine();
 
             while(line!=null){
                 List<String> values = Arrays.asList(line.split(COLUMN_SEPARATOR));
@@ -72,10 +75,10 @@ public class RestaurantsManager {
         return restaurants;
     }
 
-    public void deleteId(UUID uuid) throws IndexOutOfBoundsException{
+    public void delete(String s) throws IndexOutOfBoundsException{
         HashSet<Restaurant> restaurants = load();
 
-        restaurants.removeIf(i->i.getUuid().equals(uuid));
+        restaurants.removeIf(i -> i.getUuid().toString().equals(s) || i.getName().equals(s));
 
         save(restaurants);
     }
@@ -83,6 +86,9 @@ public class RestaurantsManager {
     public void save(HashSet<Restaurant> restaurants){
         try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"))){
             Stream<Restaurant> stream = restaurants.stream();
+
+            bufferedWriter.write("Name, Address, Has Telephone Number?, Telephone Number, Places, Outside sitting, Lunch Menu, Longtitute, Latitude, UUId");
+            bufferedWriter.newLine();
 
             stream.forEach(i->{
                     try{
@@ -110,7 +116,7 @@ public class RestaurantsManager {
         sb.append(COLUMN_SEPARATOR);
 
         if(restaurant.isNumber()){
-            sb.append(restaurant.getTelNumber().trim());
+            sb.append(restaurant.getTelephoneNumber().trim());
             sb.append(COLUMN_SEPARATOR);
         }else{
             sb.append(" ,");

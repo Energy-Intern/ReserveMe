@@ -12,18 +12,18 @@ public class Restaurant {
     private final double longtitude;
     private final double latitude;
     private final String name;
-    private final String telNumber;
+    private final String telephoneNumber;
     private final String address;
 
-    public Restaurant(String name, String address, String telNumber, int places, boolean outside, boolean lunchMenu, double longtitude, double latitude, UUID uuid){
+    public Restaurant(String name, String address, String telephoneNumber, int places, boolean outside, boolean lunchMenu, double longtitude, double latitude, UUID uuid){
         //Restaurant details
         this.name=name;
-        if(telNumber!=null) {
+        if(telephoneNumber!=null) {
             this.number = true;
         }else{
             this.number=false;
         }
-        this.telNumber=telNumber;
+        this.telephoneNumber=telephoneNumber;
 
         //Restaurant seating availability
         this.places=places;
@@ -63,8 +63,8 @@ public class Restaurant {
         return address;
     }
 
-    public String getTelNumber() {
-        return telNumber;
+    public String getTelephoneNumber() {
+        return telephoneNumber;
     }
 
     public boolean isLunchMenu() {

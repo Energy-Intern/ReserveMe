@@ -27,19 +27,19 @@ class RestaurantTest {
         RestaurantsManager restaurantsManager = new RestaurantsManager();
         restaurantsManager.save(restaurants);
 
+        int savedR = 0;
+
         try{
             BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_PATH), "UTF-8"));
 
-            int savedR = 0;
-
-            while(bf.readLine().toString()!=null){
+            while(bf.readLine()!=null){
                 savedR++;
             }
 
-            assertEquals(restaurants.size(), savedR);
         }catch (Exception e){
 
         }
+        assertEquals(restaurants.size(), savedR-1);
     }
 
     @Test

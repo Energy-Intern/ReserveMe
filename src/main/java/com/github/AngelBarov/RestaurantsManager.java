@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Stream;
 
-import org.apache.commons.csv.*;
-
 public class RestaurantsManager {
     private static final String COLUMN_SEPARATOR = ",";
     private static final String FILE_PATH = "listOfRestaurants.csv";
@@ -28,8 +26,8 @@ public class RestaurantsManager {
         }
     }
 
-    public HashSet<Restaurant> load(){
-        HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
+    public Collection<Restaurant> load(){
+        Collection<Restaurant> restaurants = new HashSet<Restaurant>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));){
             String line = br.readLine();
@@ -76,14 +74,14 @@ public class RestaurantsManager {
     }
 
     public void delete(String s) throws IndexOutOfBoundsException{
-        HashSet<Restaurant> restaurants = load();
+        Collection<Restaurant> restaurants = load();
 
         restaurants.removeIf(i -> i.getUuid().toString().equals(s) || i.getName().equals(s));
 
         save(restaurants);
     }
 
-    public void save(HashSet<Restaurant> restaurants){
+    public void save(Collection<Restaurant> restaurants){
         try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"))){
             Stream<Restaurant> stream = restaurants.stream();
 

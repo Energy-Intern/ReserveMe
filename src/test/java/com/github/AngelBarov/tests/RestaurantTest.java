@@ -102,8 +102,7 @@ class RestaurantTest {
     public void TestFind(){
         RestaurantsManager restaurantsManager = new RestaurantsManager();
 
-        HashSet<Restaurant> restaurants = restaurantsManager.load();
-        HashSet<Restaurant> restaurants1 = restaurantsManager.load();
+        HashSet<Restaurant> restaurants1 = (HashSet<Restaurant>) restaurantsManager.load();
 
         Restaurant r = (Restaurant)restaurants1.toArray()[0];
 
@@ -121,7 +120,7 @@ class RestaurantTest {
 
         RestaurantsManager restaurantsManager = new RestaurantsManager();
 
-        HashSet<Restaurant> restaurants = restaurantsManager.load();
+        HashSet<Restaurant> restaurants = (HashSet<Restaurant>) restaurantsManager.load();
 
         int size = restaurants.size();
 
@@ -131,7 +130,7 @@ class RestaurantTest {
             }
         });
 
-        HashSet<Restaurant> restaurants1 = restaurantsManager.load();
+        HashSet<Restaurant> restaurants1 = (HashSet<Restaurant>) restaurantsManager.load();
 
         assertEquals(size-1, restaurants1.size());
 

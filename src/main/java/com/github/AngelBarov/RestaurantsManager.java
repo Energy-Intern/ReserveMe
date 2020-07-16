@@ -85,7 +85,7 @@ public class RestaurantsManager {
         try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"))){
             Stream<Restaurant> stream = restaurants.stream();
 
-            bufferedWriter.write("Name, Address, Has Telephone Number?, Telephone Number, Places, Outside sitting, Lunch Menu, Longtitute, Latitude, UUId");
+            bufferedWriter.write("Name, Address, Has Telephone Number?, Telephone Number, Places, Outside sitting, Lunch Menu, Longtitude, Latitude, UUId");
             bufferedWriter.newLine();
 
             stream.forEach(i->{

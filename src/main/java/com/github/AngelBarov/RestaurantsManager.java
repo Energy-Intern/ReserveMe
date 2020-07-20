@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Stream;
 
+import org.apache.commons.csv.*;
+
 public class RestaurantsManager {
     private static final String COLUMN_SEPARATOR = ",";
     private static final String FILE_PATH = "listOfRestaurants.csv";
@@ -82,16 +84,14 @@ public class RestaurantsManager {
     }
 
     public void save(Collection<Restaurant> restaurants){
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "UTF-8"))){
+        try(CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(FILE_PATH), CSVFormat.DEFAULT)){
             Stream<Restaurant> stream = restaurants.stream();
 
-            bufferedWriter.write("Name, Address, Has Telephone Number?, Telephone Number, Places, Outside sitting, Lunch Menu, Longtitude, Latitude, UUId");
-            bufferedWriter.newLine();
+            csvPrinter.printRecord("Name", "Address", "Has Telephone Number?", "Telephone Number", "Places", "Outside sitting", "Lunch Menu", "Longtitude", "Latitude", "UUId");
 
             stream.forEach(i->{
                     try{
-                        bufferedWriter.write(RestaurantToString(i));
-                        bufferedWriter.newLine();
+                        csvPrinter.printRecord(RestaurantToString(i).split(COLUMN_SEPARATOR));
                     }catch (IOException e){
                         e.printStackTrace();
                     }

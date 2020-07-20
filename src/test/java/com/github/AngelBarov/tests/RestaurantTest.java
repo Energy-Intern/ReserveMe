@@ -23,6 +23,8 @@ class RestaurantTest {
 
         restaurants.add(new Restaurant("r1", "a1", "0885674563", 13, true, true, 23.239, 45.2837,  null));
         restaurants.add(new Restaurant("r2", "a2", "0884567894", 13, true, true, 23.239, 45.2837,  null));
+        restaurants.add(new Restaurant("r3", "a3", "0885468978", 45, false, false, 21.9, 434.432,  null));
+        restaurants.add(new Restaurant("r4", "a4", "0885468978", 45, false, false, 21.9, 434.432,  null));
 
         RestaurantsManager restaurantsManager = new RestaurantsManager();
         restaurantsManager.save(restaurants);
@@ -94,7 +96,7 @@ class RestaurantTest {
             e.printStackTrace();
         }
 
-        assertEquals(howMuch, 2);
+        assertEquals(howMuch, 4);
     }
 
     @Test
@@ -136,20 +138,20 @@ class RestaurantTest {
 
     }
 
-    /*@Test
+    @Test
     @Order(5)
     public void TestUpdate(){
-        HashSet<com.github.AngelBarov.Restaurant> restaurants = new HashSet<com.github.AngelBarov.Restaurant>();
+        HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
 
-        restaurants.add(new com.github.AngelBarov.Restaurant("n1", "b1", null, 13, true, true, 23.239, 45.2837, null));
-        restaurants.add(new com.github.AngelBarov.Restaurant("djfndj", "ndjfn", null, 35, true, true, 3.239, 45.2837, null));
+        restaurants.add(new Restaurant("n1", "b1", null, 13, true, true, 23.239, 45.2837, null));
+        restaurants.add(new Restaurant("djfndj", "ndjfn", null, 35, true, true, 3.239, 45.2837, null));
 
         try(FileWriter fw = new FileWriter("listOfRestaurants.csv", false);){
-            new com.github.AngelBarov.RestaurantsManager().save(restaurants);
+            new RestaurantsManager().save(restaurants);
         }catch (IOException e) {
             e.printStackTrace();
         }
 
-    }*/
+    }
 
 }

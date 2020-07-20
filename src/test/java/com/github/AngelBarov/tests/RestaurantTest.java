@@ -21,10 +21,50 @@ class RestaurantTest {
 
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
 
-        restaurants.add(new Restaurant("r1", "a1", "0885674563", 13, true, true, 23.239, 45.2837,  null));
-        restaurants.add(new Restaurant("r2", "a2", "0884567894", 13, true, true, 23.239, 45.2837,  null));
-        restaurants.add(new Restaurant("r3", "a3", "0885468978", 45, false, false, 21.9, 434.432,  null));
-        restaurants.add(new Restaurant("r4", "a4", "0885468978", 45, false, false, 21.9, 434.432,  null));
+        restaurants.add(new Restaurant(
+                "r1",
+                "a1",
+                "0884824612",
+                13,
+                true,
+                true,
+                23.239,
+                45.2837,
+                null
+        ));
+        restaurants.add(new Restaurant(
+                "r2",
+                "a2",
+                null,
+                13,
+                true,
+                true,
+                23.239,
+                45.2837,
+                null
+        ));
+        restaurants.add(new Restaurant(
+                "r3",
+                "a3",
+                "0885468978",
+                45,
+                false,
+                false,
+                21.9,
+                434.432,
+                null
+        ));
+        restaurants.add(new Restaurant(
+                "r4",
+                "a4",
+                "0885468978",
+                45,
+                false,
+                false,
+                21.9,
+                434.432,
+                null
+        ));
 
         RestaurantsManager restaurantsManager = new RestaurantsManager();
         restaurantsManager.save(restaurants);
@@ -59,34 +99,6 @@ class RestaurantTest {
             while(line!=null) {
 
                 howMuch++;
-
-                List<String> values = Arrays.asList(line.split(COLUMN_SEPARATOR));
-
-                if (Boolean.parseBoolean(values.get(2))){
-                    restaurants.add(new Restaurant(
-                            values.get(0),
-                            values.get(1),
-                            values.get(3),
-                            Integer.parseInt(values.get(4)),
-                            Boolean.parseBoolean(values.get(5)),
-                            Boolean.parseBoolean(values.get(6)),
-                            Double.parseDouble(values.get(7)),
-                            Double.parseDouble(values.get(8)),
-                            UUID.fromString(values.get(9))
-                    ));
-                } else {
-                    restaurants.add(new Restaurant(
-                            values.get(0),
-                            values.get(1),
-                            null,
-                            Integer.parseInt(values.get(4)),
-                            Boolean.parseBoolean(values.get(5)),
-                            Boolean.parseBoolean(values.get(6)),
-                            Double.parseDouble(values.get(7)),
-                            Double.parseDouble(values.get(8)),
-                            UUID.fromString(values.get(9))
-                    ));
-                }
 
                 line = br.readLine();
             }
@@ -126,15 +138,11 @@ class RestaurantTest {
 
         int size = restaurants.size();
 
-        restaurants.forEach(i -> {
-            if(i.getName().equals("r1")){
-                restaurantsManager.delete(i.getName());
-            }
-        });
+        restaurantsManager.delete("r1");
 
-        HashSet<Restaurant> restaurants1 = (HashSet<Restaurant>) restaurantsManager.load();
+         restaurants = (HashSet<Restaurant>) restaurantsManager.load();
 
-        assertEquals(size-1, restaurants1.size());
+        assertEquals(size-1, restaurants.size());
 
     }
 
@@ -143,8 +151,28 @@ class RestaurantTest {
     public void TestUpdate(){
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
 
-        restaurants.add(new Restaurant("n1", "b1", null, 13, true, true, 23.239, 45.2837, null));
-        restaurants.add(new Restaurant("djfndj", "ndjfn", null, 35, true, true, 3.239, 45.2837, null));
+        restaurants.add(new Restaurant(
+                "n1",
+                "b1",
+                null,
+                13,
+                true,
+                true,
+                23.239,
+                45.2837,
+                null
+        ));
+        restaurants.add(new Restaurant(
+                "djfndj",
+                "ndjfn",
+                null,
+                35,
+                true,
+                true,
+                3.239,
+                45.2837,
+                null
+        ));
 
         try(FileWriter fw = new FileWriter("listOfRestaurants.csv", false);){
             new RestaurantsManager().save(restaurants);

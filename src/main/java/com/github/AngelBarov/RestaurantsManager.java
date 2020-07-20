@@ -10,7 +10,7 @@ public class RestaurantsManager {
     private static final String COLUMN_SEPARATOR = ",";
     private static final String FILE_PATH = "listOfRestaurants.csv";
 
-    public void update(HashSet restaurants){
+    public void update(Collection<Restaurant> restaurants){
         try(FileWriter fw = new FileWriter(FILE_PATH, false);){
             save(restaurants);
         }catch (IOException e){
@@ -28,46 +28,25 @@ public class RestaurantsManager {
         }
     }
 
-    public Collection<Restaurant> load(){
-        Collection<Restaurant> restaurants = new HashSet<Restaurant>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));){
-            String line = br.readLine();
-            line = br.readLine();
-
-            while(line!=null){
-                List<String> values = Arrays.asList(line.split(COLUMN_SEPARATOR));
-
-                if(Boolean.parseBoolean(values.get(2))) {
-                    restaurants.add(new Restaurant(
-                            values.get(0),
-                            values.get(1),
-                            values.get(3),
-                            Integer.parseInt(values.get(4)),
-                            Boolean.parseBoolean(values.get(5)),
-                            Boolean.parseBoolean(values.get(6)),
-                            Double.parseDouble(values.get(7)),
-                            Double.parseDouble(values.get(8)),
-                            UUID.fromString(values.get(9))
-                    ));
-                }
-                else {
-                    restaurants.add(new Restaurant(
-                            values.get(0),
-                            values.get(1),
-                            null,
-                            Integer.parseInt(values.get(4)),
-                            Boolean.parseBoolean(values.get(5)),
-                            Boolean.parseBoolean(values.get(6)),
-                            Double.parseDouble(values.get(7)),
-                            Double.parseDouble(values.get(8)),
-                            UUID.fromString(values.get(9))
-                    ));
-                }
-                line = br.readLine();
-            }
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
+    public Collection<Restaurant> load() {
+        Collection<Restaurant> restaurants = new HashSet<Restaurant>() ;
+        try {
+            File file = new File(FILE_PATH);
+            InputStreamReader input = new InputStreamReader(new FileInputStream(file));
+            CSVParser csvParser = CSVFormat.EXCEL.withFirstRecordAsHeader().parse(input);
+            csvParser.forEach(i->
+                restaurants.add(new Restaurant(
+                        i.get("Name"),
+                        i.get("Address"),
+                        i.get("Telephone Number"),
+                        Integer.parseInt(i.get("Places")),
+                        Boolean.parseBoolean(i.get("Outside sitting")),
+                        Boolean.parseBoolean(i.get("Lunch Menu")),
+                        Double.parseDouble(i.get("Longtitude")),
+                        Double.parseDouble(i.get("Latitude")),
+                        UUID.fromString(i.get("UUId"))
+                ))
+            );
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -84,12 +63,9 @@ public class RestaurantsManager {
     }
 
     public void save(Collection<Restaurant> restaurants){
-        try(CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(FILE_PATH), CSVFormat.DEFAULT)){
-            Stream<Restaurant> stream = restaurants.stream();
+        try(CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(FILE_PATH), CSVFormat.DEFAULT.withHeader("Name", "Address", "Has Telephone Number?", "Telephone Number", "Places", "Outside sitting", "Lunch Menu", "Longtitude", "Latitude", "UUId"))){
 
-            csvPrinter.printRecord("Name", "Address", "Has Telephone Number?", "Telephone Number", "Places", "Outside sitting", "Lunch Menu", "Longtitude", "Latitude", "UUId");
-
-            stream.forEach(i->{
+            restaurants.forEach(i->{
                     try{
                         csvPrinter.printRecord(RestaurantToString(i).split(COLUMN_SEPARATOR));
                     }catch (IOException e){

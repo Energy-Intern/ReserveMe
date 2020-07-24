@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import org.apache.commons.csv.*;
 
 public class RestaurantsManager {
-    private static final String COLUMN_SEPARATOR = ",";
     private static final String FILE_PATH = "listOfRestaurants.csv";
     private static final String[] HEADER = {
             "Name",

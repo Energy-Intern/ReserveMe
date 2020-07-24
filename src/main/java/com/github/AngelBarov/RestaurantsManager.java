@@ -2,40 +2,62 @@ package com.github.AngelBarov;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.csv.*;
 
 public class RestaurantsManager {
-    private static final String COLUMN_SEPARATOR = ",";
     private static final String FILE_PATH = "listOfRestaurants.csv";
+    private static final String[] HEADER = {
+            "Name",
+            "Address",
+            "Has Telephone Number?",
+            "Telephone Number",
+            "Places",
+            "Outside sitting",
+            "Lunch Menu",
+            "Longtitude",
+            "Latitude",
+            "Id"
+    };
+    private Set<Restaurant> restaurants = new HashSet<Restaurant>();
 
-    public void update(Collection<Restaurant> restaurants){
+    public Set<Restaurant> getRestaurants() {
+        return restaurants;
+    }
+
+    public void update(Collection<Restaurant> restaurants1){
+        this.restaurants = (Set) restaurants1;
         try(FileWriter fw = new FileWriter(FILE_PATH, false);){
-            save(restaurants);
+            save();
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    public Restaurant find(Collection<Restaurant> restaurants, String s){
-        restaurants.removeIf(i -> !i.getUuid().toString().equals(s) && !i.getName().equals(s));
-
-        try{
-            return (Restaurant) restaurants.toArray()[0];
-        }catch (ArrayIndexOutOfBoundsException e) {
-            return null;
-        }
+    public Optional<Restaurant> findByName(String name){
+        return find(restaurant -> restaurant.getName().equals(name));
     }
 
-    public Collection<Restaurant> load() {
-        Collection<Restaurant> restaurants = new HashSet<Restaurant>() ;
+    public Optional<Restaurant> findById(String id){
+        return find(restaurant -> restaurant.getId().equals(id));
+    }
+
+    private Optional<Restaurant> find(Predicate<Restaurant> predicate){
+         return this.restaurants.stream()
+                .filter(predicate)
+                .findFirst();
+    }
+
+    public void load() {
         try {
+            restaurants.clear();
             File file = new File(FILE_PATH);
             InputStreamReader input = new InputStreamReader(new FileInputStream(file));
             CSVParser csvParser = CSVFormat.EXCEL.withFirstRecordAsHeader().parse(input);
             csvParser.forEach(i->
-                restaurants.add(new Restaurant(
+                this.restaurants.add(new Restaurant(
                         i.get("Name"),
                         i.get("Address"),
                         i.get("Telephone Number"),
@@ -44,30 +66,33 @@ public class RestaurantsManager {
                         Boolean.parseBoolean(i.get("Lunch Menu")),
                         Double.parseDouble(i.get("Longtitude")),
                         Double.parseDouble(i.get("Latitude")),
-                        UUID.fromString(i.get("UUId"))
+                        i.get("Id")
                 ))
             );
         }catch (IOException e){
             e.printStackTrace();
         }
 
-        return restaurants;
     }
 
-    public void delete(String s) throws IndexOutOfBoundsException{
-        Collection<Restaurant> restaurants = load();
-
-        restaurants.removeIf(i -> i.getUuid().toString().equals(s) || i.getName().equals(s));
-
-        save(restaurants);
+    public void add(Restaurant restaurant){
+        this.restaurants.add(restaurant);
     }
 
-    public void save(Collection<Restaurant> restaurants){
-        try(CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(FILE_PATH), CSVFormat.DEFAULT.withHeader("Name", "Address", "Has Telephone Number?", "Telephone Number", "Places", "Outside sitting", "Lunch Menu", "Longtitude", "Latitude", "UUId"))){
+    public void delete(String id){
+        load();
 
-            restaurants.forEach(i->{
+        this.restaurants.removeIf(restaurant -> restaurant.getId().equals(id));
+
+        save();
+    }
+
+    public void save(){
+        try(CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(FILE_PATH), CSVFormat.DEFAULT.withHeader(HEADER))){
+
+            this.restaurants.forEach(restaurant->{
                     try{
-                        csvPrinter.printRecord(RestaurantToString(i).split(COLUMN_SEPARATOR));
+                        csvPrinter.printRecord(RestaurantToString(restaurant));
                     }catch (IOException e){
                         e.printStackTrace();
                     }
@@ -77,43 +102,37 @@ public class RestaurantsManager {
         }
     }
 
-    public String RestaurantToString(Restaurant restaurant){
-        StringBuffer sb = new StringBuffer();
+    public String[] RestaurantToString(Restaurant restaurant){
+        try{
+            String[] restaurantString = {
+                    restaurant.getName().trim(),
+                    restaurant.getAddress().trim(),
+                    String.valueOf(restaurant.isNumber()),
+                    restaurant.getTelephoneNumber().trim(),
+                    String.valueOf(restaurant.getPlaces()),
+                    String.valueOf(restaurant.isOutside()),
+                    String.valueOf(restaurant.isLunchMenu()),
+                    String.valueOf(restaurant.getLongtitude()),
+                    String.valueOf(restaurant.getLatitude()),
+                    restaurant.getId()
+            };
+            return restaurantString;
+        }catch (NullPointerException e){
+            String[] restaurantString = {
+                    restaurant.getName().trim(),
+                    restaurant.getAddress().trim(),
+                    String.valueOf(restaurant.isNumber()),
+                    null,
+                    String.valueOf(restaurant.getPlaces()),
+                    String.valueOf(restaurant.isOutside()),
+                    String.valueOf(restaurant.isLunchMenu()),
+                    String.valueOf(restaurant.getLongtitude()),
+                    String.valueOf(restaurant.getLatitude()),
+                    restaurant.getId()
+            };
 
-        sb.append(restaurant.getName().trim());
-        sb.append(COLUMN_SEPARATOR);
-
-        sb.append(restaurant.getAddress().trim());
-        sb.append(COLUMN_SEPARATOR);
-
-        sb.append(restaurant.isNumber());
-        sb.append(COLUMN_SEPARATOR);
-
-        if(restaurant.isNumber()){
-            sb.append(restaurant.getTelephoneNumber().trim());
-            sb.append(COLUMN_SEPARATOR);
-        }else{
-            sb.append(" ,");
+            return restaurantString;
         }
-
-        sb.append(restaurant.getPlaces());
-        sb.append(COLUMN_SEPARATOR);
-
-        sb.append(restaurant.isOutside());
-        sb.append(COLUMN_SEPARATOR);
-
-        sb.append(restaurant.isLunchMenu());
-        sb.append(COLUMN_SEPARATOR);
-
-        sb.append(restaurant.getLongtitude());
-        sb.append(COLUMN_SEPARATOR);
-
-        sb.append(restaurant.getLatitude());
-        sb.append(COLUMN_SEPARATOR);
-
-        sb.append(restaurant.getUuid().toString());
-
-        return sb.toString();
     }
 
 }

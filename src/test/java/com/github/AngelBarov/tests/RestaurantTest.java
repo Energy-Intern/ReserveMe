@@ -162,6 +162,7 @@ class RestaurantTest {
         restaurantsManager.update(restaurants);
 
         assertEquals(2, restaurantsManager.getRestaurants().size());
+        assertEquals(restaurants, restaurantsManager.getRestaurants());
     }
 
 }

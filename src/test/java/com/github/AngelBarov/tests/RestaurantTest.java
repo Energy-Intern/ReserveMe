@@ -14,6 +14,7 @@ import java.util.*;
 class RestaurantTest {
     private static final String FILE_PATH = "listOfRestaurants.csv";
     private final RestaurantsManager restaurantsManager = new RestaurantsManager();
+    private RestaurantsManager restaurantsManagerForComparing;
 
     @Test
     @Order(1)
@@ -66,6 +67,8 @@ class RestaurantTest {
 
         restaurantsManager.save();
 
+        restaurantsManagerForComparing = restaurantsManager;
+
         int savedR = 0;
 
         try{
@@ -74,20 +77,27 @@ class RestaurantTest {
             while(bf.readLine()!=null){
                 savedR++;
             }
-
         }catch (Exception e){
 
         }
 
         assertEquals(4, savedR-1);
+        assertEquals(restaurantsManagerForComparing, restaurantsManager);
     }
 
     @Test
     @Order(2)
     public void TestLoading() {
+        restaurantsManagerForComparing = restaurantsManager;
+
         restaurantsManager.load();
 
         assertEquals(4, restaurantsManager.getRestaurants().size());
+        assertEquals("r1", restaurantsManager.getRestaurants().get(0).getName());
+        assertEquals("r2", restaurantsManager.getRestaurants().get(1).getName());
+        assertEquals("r3", restaurantsManager.getRestaurants().get(2).getName());
+        assertEquals("r4", restaurantsManager.getRestaurants().get(3).getName());
+        assertEquals(restaurantsManagerForComparing, restaurantsManager);
     }
 
     @Test
@@ -96,7 +106,7 @@ class RestaurantTest {
 
         restaurantsManager.load();
 
-        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().toArray()[0];
+        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().get(0);
 
         Restaurant restaurant1 = restaurantsManager.findById(restaurant.getId()).get();
         Restaurant restaurant2 = restaurantsManager.findByName(restaurant.getName()).get();
@@ -111,11 +121,12 @@ class RestaurantTest {
 
         this.restaurantsManager.load();
 
-        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().toArray()[0];
+        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().get(0);
 
         this.restaurantsManager.delete(restaurant.getId());
 
         assertEquals(3, this.restaurantsManager.getRestaurants().size());
+        assertEquals("r2", this.restaurantsManager.getRestaurants().get(0).getName());
 
     }
 
@@ -123,7 +134,7 @@ class RestaurantTest {
     @Order(5)
     public void TestUpdate(){
 
-        HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
+        List<Restaurant> restaurants = new ArrayList<Restaurant>();
 
         restaurants.add(new Restaurant(
                 "n1",
@@ -151,7 +162,6 @@ class RestaurantTest {
         restaurantsManager.update(restaurants);
 
         assertEquals(2, restaurantsManager.getRestaurants().size());
-
     }
 
 }

@@ -21,14 +21,14 @@ public class RestaurantsManager {
             "Latitude",
             "Id"
     };
-    private Set<Restaurant> restaurants = new HashSet<Restaurant>();
+    private List<Restaurant> restaurants = new ArrayList<Restaurant>();
 
-    public Set<Restaurant> getRestaurants() {
+    public List<Restaurant> getRestaurants() {
         return restaurants;
     }
 
     public void update(Collection<Restaurant> restaurants1){
-        this.restaurants = (Set) restaurants1;
+        this.restaurants = (List<Restaurant>) restaurants1;
         try(FileWriter fw = new FileWriter(FILE_PATH, false);){
             save();
         }catch (IOException e){

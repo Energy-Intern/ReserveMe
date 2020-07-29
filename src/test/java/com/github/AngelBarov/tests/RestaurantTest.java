@@ -14,6 +14,10 @@ import java.util.*;
 class RestaurantTest {
     private static final String FILE_PATH = "listOfRestaurants.csv";
     private final RestaurantsManager restaurantsManager = new RestaurantsManager();
+<<<<<<< HEAD
+=======
+    private RestaurantsManager restaurantsManagerForComparing;
+>>>>>>> Fixing
 
     @Test
     @Order(1)
@@ -65,6 +69,11 @@ class RestaurantTest {
         ));
 
         restaurantsManager.save();
+<<<<<<< HEAD
+=======
+
+        restaurantsManagerForComparing = restaurantsManager;
+>>>>>>> Fixing
 
         int savedR = 0;
 
@@ -74,20 +83,36 @@ class RestaurantTest {
             while(bf.readLine()!=null){
                 savedR++;
             }
-
         }catch (Exception e){
 
         }
 
         assertEquals(4, savedR-1);
+<<<<<<< HEAD
+=======
+        assertEquals(restaurantsManagerForComparing, restaurantsManager);
+>>>>>>> Fixing
     }
 
     @Test
     @Order(2)
     public void TestLoading() {
+<<<<<<< HEAD
         restaurantsManager.load();
 
         assertEquals(4, restaurantsManager.getRestaurants().size());
+=======
+        restaurantsManagerForComparing = restaurantsManager;
+
+        restaurantsManager.load();
+
+        assertEquals(4, restaurantsManager.getRestaurants().size());
+        assertEquals("r1", restaurantsManager.getRestaurants().get(0).getName());
+        assertEquals("r2", restaurantsManager.getRestaurants().get(1).getName());
+        assertEquals("r3", restaurantsManager.getRestaurants().get(2).getName());
+        assertEquals("r4", restaurantsManager.getRestaurants().get(3).getName());
+        assertEquals(restaurantsManagerForComparing, restaurantsManager);
+>>>>>>> Fixing
     }
 
     @Test
@@ -96,7 +121,11 @@ class RestaurantTest {
 
         restaurantsManager.load();
 
+<<<<<<< HEAD
         Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().toArray()[0];
+=======
+        Restaurant restaurant = this.restaurantsManager.getRestaurants().get(0);
+>>>>>>> Fixing
 
         Restaurant restaurant1 = restaurantsManager.findById(restaurant.getId()).get();
         Restaurant restaurant2 = restaurantsManager.findByName(restaurant.getName()).get();
@@ -111,11 +140,19 @@ class RestaurantTest {
 
         this.restaurantsManager.load();
 
+<<<<<<< HEAD
         Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().toArray()[0];
+=======
+        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().get(0);
+>>>>>>> Fixing
 
         this.restaurantsManager.delete(restaurant.getId());
 
         assertEquals(3, this.restaurantsManager.getRestaurants().size());
+<<<<<<< HEAD
+=======
+        assertEquals("r2", this.restaurantsManager.getRestaurants().get(0).getName());
+>>>>>>> Fixing
 
     }
 
@@ -123,7 +160,11 @@ class RestaurantTest {
     @Order(5)
     public void TestUpdate(){
 
+<<<<<<< HEAD
         HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
+=======
+        List<Restaurant> restaurants = new ArrayList<Restaurant>();
+>>>>>>> Fixing
 
         restaurants.add(new Restaurant(
                 "n1",
@@ -149,9 +190,14 @@ class RestaurantTest {
         ));
 
         restaurantsManager.update(restaurants);
+<<<<<<< HEAD
 
         assertEquals(2, restaurantsManager.getRestaurants().size());
+=======
+>>>>>>> Fixing
 
+        assertEquals(2, restaurantsManager.getRestaurants().size());
+        assertEquals(restaurants, restaurantsManager.getRestaurants());
     }
 
 }

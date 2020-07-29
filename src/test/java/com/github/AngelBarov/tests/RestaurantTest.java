@@ -106,7 +106,7 @@ class RestaurantTest {
 
         restaurantsManager.load();
 
-        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().get(0);
+        Restaurant restaurant = this.restaurantsManager.getRestaurants().get(0);
 
         Restaurant restaurant1 = restaurantsManager.findById(restaurant.getId()).get();
         Restaurant restaurant2 = restaurantsManager.findByName(restaurant.getName()).get();

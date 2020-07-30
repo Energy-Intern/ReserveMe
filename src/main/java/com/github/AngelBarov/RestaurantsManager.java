@@ -21,24 +21,14 @@ public class RestaurantsManager {
             "Latitude",
             "Id"
     };
-<<<<<<< HEAD
-    private Set<Restaurant> restaurants = new HashSet<Restaurant>();
-
-    public Set<Restaurant> getRestaurants() {
-=======
     private List<Restaurant> restaurants = new ArrayList<Restaurant>();
 
     public List<Restaurant> getRestaurants() {
->>>>>>> Fixing
         return restaurants;
     }
 
     public void update(Collection<Restaurant> restaurants1){
-<<<<<<< HEAD
-        this.restaurants = (Set) restaurants1;
-=======
         this.restaurants = (List<Restaurant>) restaurants1;
->>>>>>> Fixing
         try(FileWriter fw = new FileWriter(FILE_PATH, false);){
             save();
         }catch (IOException e){

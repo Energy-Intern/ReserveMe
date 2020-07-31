@@ -13,15 +13,14 @@ import java.util.*;
 
 class RestaurantTest {
     private static final String FILE_PATH = "listOfRestaurants.csv";
-    private static final String COLUMN_SEPARATOR = ",";
+    private final RestaurantsManager restaurantsManager = new RestaurantsManager();
+    private RestaurantsManager restaurantsManagerForComparing;
 
     @Test
     @Order(1)
     public void TestSaving() {
 
-        HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
-
-        restaurants.add(new Restaurant(
+        restaurantsManager.add(new Restaurant(
                 "r1",
                 "a1",
                 "0884824612",
@@ -32,7 +31,7 @@ class RestaurantTest {
                 45.2837,
                 null
         ));
-        restaurants.add(new Restaurant(
+        restaurantsManager.add(new Restaurant(
                 "r2",
                 "a2",
                 null,
@@ -43,7 +42,7 @@ class RestaurantTest {
                 45.2837,
                 null
         ));
-        restaurants.add(new Restaurant(
+        restaurantsManager.add(new Restaurant(
                 "r3",
                 "a3",
                 "0885468978",
@@ -54,7 +53,7 @@ class RestaurantTest {
                 434.432,
                 null
         ));
-        restaurants.add(new Restaurant(
+        restaurantsManager.add(new Restaurant(
                 "r4",
                 "a4",
                 "0885468978",
@@ -66,8 +65,8 @@ class RestaurantTest {
                 null
         ));
 
-        RestaurantsManager restaurantsManager = new RestaurantsManager();
-        restaurantsManager.save(restaurants);
+        restaurantsManager.save();
+        restaurantsManagerForComparing = restaurantsManager;
 
         int savedR = 0;
 
@@ -77,79 +76,68 @@ class RestaurantTest {
             while(bf.readLine()!=null){
                 savedR++;
             }
-
         }catch (Exception e){
 
         }
-        assertEquals(restaurants.size(), savedR-1);
+
+        assertEquals(4, savedR-1);
+        assertEquals(restaurantsManagerForComparing, restaurantsManager);
     }
 
     @Test
     @Order(2)
     public void TestLoading() {
+        restaurantsManager.load();
 
-        int howMuch=0;
-        HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
+        assertEquals(4, restaurantsManager.getRestaurants().size());
+        restaurantsManagerForComparing = restaurantsManager;
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(FILE_PATH));
-            String line = br.readLine();
-            line=br.readLine();
+        restaurantsManager.load();
 
-            while(line!=null) {
-
-                howMuch++;
-
-                line = br.readLine();
-            }
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-        assertEquals(howMuch, 4);
+        assertEquals(4, restaurantsManager.getRestaurants().size());
+        assertEquals("r1", restaurantsManager.getRestaurants().get(0).getName());
+        assertEquals("r2", restaurantsManager.getRestaurants().get(1).getName());
+        assertEquals("r3", restaurantsManager.getRestaurants().get(2).getName());
+        assertEquals("r4", restaurantsManager.getRestaurants().get(3).getName());
+        assertEquals(restaurantsManagerForComparing, restaurantsManager);
     }
 
     @Test
     @Order(3)
     public void TestFind(){
-        RestaurantsManager restaurantsManager = new RestaurantsManager();
 
-        HashSet<Restaurant> restaurants1 = (HashSet<Restaurant>) restaurantsManager.load();
+        restaurantsManager.load();
 
-        Restaurant r = (Restaurant)restaurants1.toArray()[0];
+        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().toArray()[0];
 
-        String name = r.getName();
-        String uuid = r.getUuid().toString();
+        Restaurant restaurant1 = restaurantsManager.findById(restaurant.getId()).get();
+        Restaurant restaurant2 = restaurantsManager.findByName(restaurant.getName()).get();
 
-        assertEquals(r.getUuid(), restaurantsManager.find(restaurants1, name).getUuid());
-        assertEquals(r.getName(), restaurantsManager.find(restaurants1, uuid).getName());
-
+        assertEquals(restaurant, restaurant1);
+        assertEquals(restaurant, restaurant2);
     }
 
     @Test
     @Order(4)
     public void TestDelete () {
 
-        RestaurantsManager restaurantsManager = new RestaurantsManager();
+        this.restaurantsManager.load();
 
-        HashSet<Restaurant> restaurants = (HashSet<Restaurant>) restaurantsManager.load();
+        Restaurant restaurant = (Restaurant) this.restaurantsManager.getRestaurants().get(0);
 
-        int size = restaurants.size();
+        this.restaurantsManager.delete(restaurant.getId());
 
-        restaurantsManager.delete("r1");
+        assertEquals(3, this.restaurantsManager.getRestaurants().size());
 
-         restaurants = (HashSet<Restaurant>) restaurantsManager.load();
-
-        assertEquals(size-1, restaurants.size());
+        assertEquals("r2", this.restaurantsManager.getRestaurants().get(0).getName());
 
     }
 
     @Test
     @Order(5)
     public void TestUpdate(){
-        HashSet<Restaurant> restaurants = new HashSet<Restaurant>();
+
+        List<Restaurant> restaurants = new ArrayList<Restaurant>();
 
         restaurants.add(new Restaurant(
                 "n1",
@@ -174,12 +162,12 @@ class RestaurantTest {
                 null
         ));
 
-        try(FileWriter fw = new FileWriter("listOfRestaurants.csv", false);){
-            new RestaurantsManager().save(restaurants);
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+        restaurantsManager.update(restaurants);
 
+        assertEquals(2, restaurantsManager.getRestaurants().size());
+
+        assertEquals(2, restaurantsManager.getRestaurants().size());
+        assertEquals(restaurants, restaurantsManager.getRestaurants());
     }
 
 }

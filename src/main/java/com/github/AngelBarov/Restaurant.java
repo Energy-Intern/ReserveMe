@@ -3,7 +3,7 @@ package com.github.AngelBarov;
 import java.util.*;
 
 public class Restaurant {
-    private final UUID uuid;
+    private final String id;
     private HashMap<String , Integer> menu;
     private final int places;
     private final boolean lunchMenu;
@@ -15,7 +15,17 @@ public class Restaurant {
     private final String telephoneNumber;
     private final String address;
 
-    public Restaurant(String name, String address, String telephoneNumber, int places, boolean outside, boolean lunchMenu, double longtitude, double latitude, UUID uuid){
+    public Restaurant(
+            String name,
+            String address,
+            String telephoneNumber,
+            int places,
+            boolean outside,
+            boolean lunchMenu,
+            double longtitude,
+            double latitude,
+            String id){
+
         //Restaurant details
         this.name=name;
         if(telephoneNumber!=null) {
@@ -36,10 +46,10 @@ public class Restaurant {
         this.address=address;
 
         //Restaurant UUID
-        if (uuid!=null){
-            this.uuid=uuid;
+        if (id!=null){
+            this.id=id;
         } else {
-            this.uuid = UUID.randomUUID();
+            this.id = UUID.randomUUID().toString();
         }
     }
 
@@ -75,8 +85,8 @@ public class Restaurant {
         return number;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
     public boolean isOutside() {
